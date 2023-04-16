@@ -1,3 +1,4 @@
+import wordList from "./words.db.js";
 const inputs = document.querySelector(".word"),
   hintTag = document.querySelector(".hint span"),
   guessLeft = document.querySelector(".guess span"),
@@ -5,7 +6,8 @@ const inputs = document.querySelector(".word"),
   resetBtn = document.querySelector(".reset"),
   hintBtn = document.querySelector(".showhint"),
   hintElement = document.querySelector(".hint"),
-  typeInput = document.querySelector(".type-input");
+  typeInput = document.querySelector(".type-input"),
+  countryFlag = document.querySelector(".country__flag");
 
 // Intializing game variables
 
@@ -17,19 +19,22 @@ let word,
 //Select random word from word list and set up game
 function startNewGame() {
   alert("New Game Started! Guess New Word");
-  hintElement.getElementsByClassName.display = "none";
-  hintElement.getElementsByClassName.opacity = "0";
+  hintElement.style.display = "none";
+  hintElement.style.opacity = "0";
 
   // Select random word from word list
   const ranWord = wordList[Math.floor(Math.random() * wordList.length)];
-  word = ranWord;
+
+  let flag = `<img src=${ranWord.flag} alt=${ranWord.answer} class="flag">`;
+  countryFlag.innerHTML = flag;
+  word = ranWord.answer;
   // Set up game
   maxGuesses = word.length >= 5 ? 8 : 6;
   correctLetters = [];
   incorrectLetters = [];
-  hintTag.textContent = ranWord.hint;
-  guessLeft.textContent = maxGuesses;
-  mistakes.textContent = incorrectLetters;
+  hintTag.innerText = ranWord.hint;
+  guessLeft.innerText = maxGuesses;
+  mistakes.innerText = incorrectLetters;
   // Display word
   inputs.innerHTML = "";
   for (let i = 0; i < word.length; i++) {
@@ -46,28 +51,28 @@ function handleInput(e) {
   const key = e.target.value.toLowerCase();
   if (
     key.match(/^[a-z]+$/i) &&
-    !incorrectLetters.includes(`${key}`) &&
-    !correctLetters.includes(`${key}`)
+    !incorrectLetters.includes(key) &&
+    !correctLetters.includes(key)
   ) {
     //check if letter in word
     if (word.includes(key)) {
       for (let i = 0; i < word.length; i++) {
         if (word[i] === key) {
-          inputs.querySelectorAll("input")[i].value += key;
+          inputs.querySelectorAll("input")[i].value = key;
+          correctLetters.push(key); // fix: push key into correctLetters array
         }
       }
-      correctLetters += key;
     } else {
       //update inccorect guess
       maxGuesses--;
-      incorrectLetters.push(`${key}`);
+      incorrectLetters.push(key);
       mistakes.textContent = incorrectLetters;
     }
   }
   //update remain guess and check for win lose
-  guessLeft.textContent = maxGuesses;
+  guessLeft.innerText = maxGuesses;
   if (correctLetters.length === word.length) {
-    alert(`Kudos! You Found The Word ${word.toUpperCase}`);
+    alert(`Kudos! You Found The Word ${word.toUpperCase()}`);
     startNewGame();
   } else if (maxGuesses < 1) {
     alert("Game Over! You dont have remaining guesses!");
@@ -92,3 +97,6 @@ inputs.addEventListener("click", () => typeInput.focus());
 document.addEventListener("keydown", () => typeInput.focus());
 
 startNewGame();
+// flag: 'https://flagpedia.net/data/flags/w580/fr.png',
+// answer: 'france',
+// hint: 'This country is kn
