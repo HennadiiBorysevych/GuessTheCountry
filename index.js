@@ -97,6 +97,3 @@ inputs.addEventListener("click", () => typeInput.focus());
 document.addEventListener("keydown", () => typeInput.focus());
 
 startNewGame();
-// flag: 'https://flagpedia.net/data/flags/w580/fr.png',
-// answer: 'france',
-// hint: 'This country is kn
